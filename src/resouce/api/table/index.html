@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../../../../node_modules/_mockjs@1.1.0@mockjs/dist/mock.js"></script>
+    <script src="../../../../node_modules/_axios@0.18.1@axios/dist/axios.js"></script>
+    <script src="./list.js"></script>
+    <script src="./ajax.js"></script>
+</head>
+
+<body>
+
+    <script>
+        window.onload = function () {
+            axios.get('tableList.php').then(res=>{
+                console.log(res);
+            })
+        }
+    </script>
+</body>
+
+</html>

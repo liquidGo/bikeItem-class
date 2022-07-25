@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "使用谷歌调试",
+            "file": "${file}",
+            "sourceMaps": true,
+            "webRoot": "${workspaceFolder}",
+            "port": 8080,
+        }
+    ]
+}
