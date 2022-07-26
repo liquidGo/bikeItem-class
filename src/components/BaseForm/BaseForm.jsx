@@ -26,20 +26,20 @@ class BaseForm extends Component {
                 let placeholder = value.placeholder;
                 let width = value.width
                 if (value.type == '时间查询') {
-                    const begin_time = <FormItem label='订单时间' key={field+'1'} >
+                    const begin_time = <FormItem label='订单时间' key={field + '1'} >
                         {
                             getFieldDecorator('begin_time', {
-                                defaultValue:moment()
+                                defaultValue: moment()
                             })(
                                 <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime={true} placeholder={'输入起始时间'}></DatePicker>
                             )
                         }
                     </FormItem>
                     formItemList.push(begin_time)
-                    const end_time = <FormItem label='~' colon={false} key={field+'2'} >
+                    const end_time = <FormItem label='~' colon={false} key={field + '2'} >
                         {
                             getFieldDecorator('end_time', {
-                                defaultValue:moment()
+                                defaultValue: moment()
                             })(
                                 <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime={true} placeholder={'输入结束时间'}></DatePicker>
                             )
@@ -88,6 +88,17 @@ class BaseForm extends Component {
                         }
                     </FormItem>
                     formItemList.push(CHECKBOX)
+                } else if (value.type == 'datepicker') {
+                    const DatePicker = <FormItem label={label} key={field} >
+                        {
+                            getFieldDecorator([field], {
+                                defaultValue: moment()
+                            })(
+                                <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime={true} placeholder={'输入结束时间'}></DatePicker>
+                            )
+                        }
+                    </FormItem>
+                    formItemList.push(DatePicker)
                 }
             })
         }
