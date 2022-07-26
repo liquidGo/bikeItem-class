@@ -18,6 +18,7 @@ import BaseTable from './pages/table/BaseTable'
 import HightTable from './pages/table/HightTable'
 import City from './pages/city/City'
 import Order from './pages/order/Order'
+import User from './pages/user/User'
 import Common from './Common'
 import Order_details from './pages/order/Order_details'
 
@@ -47,12 +48,12 @@ export default class Iouters extends Component {
                                         <Route path='/admin/table/high' component={HightTable}></Route>
                                         <Route path='/admin/city' component={City}></Route>
                                         <Route path='/admin/order' component={Order}></Route>
+                                        <Route  path='/admin/user' component={User}></Route>
                                         <Route component={NoMatch}></Route>
                                     </Switch>
                                 </App>
                             }
                         />
-                        
                         <Route path='/common' render={() =>
                             <Common>
                                 <Route path='/common/detail/:status/:order_sn/:bike_sn/:user_name/:distance' component={Order_details}></Route>
