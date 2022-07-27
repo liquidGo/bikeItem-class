@@ -7,6 +7,8 @@ import '../../resouce/api/table/list'
 import Etable from '../../components/Etable/Etable';
 import '../../style/common.less'
 import '../../resouce/api/user/add'
+import '../../resouce/api/user/edit'
+import '../../resouce/api/user/delete'
 import moment from 'moment';
 // import { relativeTimeThreshold } from 'moment';
 const FormItem = Form.Item
@@ -27,32 +29,39 @@ export default class User extends Component {
         this.request()
     }
     handleSubmit = () => {
-        // console.log(this.user.props.form.getFieldsValue(),'123123123123123s');
-        let ajaxLoading = document.getElementById('ajaxLoading')
-        ajaxLoading.style.display = 'block'
         let type = this.state.type;
-        let data = this.user.props.form.getFieldsValue();
-        axios.post('addUser.php', {
-            data: {
-                params: data
-            }
-        }).then(res => {
-            ajaxLoading.style.display = 'none'
 
-            console.log(res, '打印res');
-            if (res.data.code == 0) {
-                this.setState({
-                    isVisible: false
-                })
-                Modal.warning({
-                    title: '提示',
-                    content: '添加成功！',
-                    onOk: () => {
-                        this.request()
-                    }
-                })
-            }
-        })
+        // console.log(this.user.props.form.getFieldsValue(),'123123123123123s');
+        if (type != 'detail') {
+            let ajaxLoading = document.getElementById('ajaxLoading')
+            ajaxLoading.style.display = 'block'
+            let data = this.user.props.form.getFieldsValue();
+            axios.post(type == 'create' ? 'addUser.php' : 'editUser.php', {
+                data: {
+                    params: data
+                }
+            }).then(res => {
+                ajaxLoading.style.display = 'none'
+                console.log(res, '打印res');
+                if (res.data.code == 0) {
+                    this.setState({
+                        isVisible: false
+                    })
+                    Modal.warning({
+                        title: '提示',
+                        content: '添加成功！',
+                        onOk: () => {
+                            this.request()
+                        }
+                    })
+                }
+            })
+        } else {
+            this.setState({
+                isVisible: false
+            })
+        }
+
 
     }
     request = () => {
@@ -98,6 +107,7 @@ export default class User extends Component {
         }
     ]
     handleOperate = (type) => {
+        let _this=this
         let item = this.state.selectedItem
         if (type == 'create') {
             this.setState({
@@ -117,6 +127,47 @@ export default class User extends Component {
                     isVisible: true,
                     title: '编辑员工',
                     userInfo: item
+                })
+            }
+        } else if (type == 'detail') {
+            if (!item) {
+                Modal.info({
+                    title: '提示',
+                    content: '请选择一条订单编辑'
+                })
+            } else {
+                this.setState({
+                    type: type,
+                    isVisible: true,
+                    title: '员工详情',
+                    userInfo: item
+                })
+            }
+        } else {
+            if (!item) {
+                Modal.info({
+                    title: '提示',
+                    content: '请选择一条订单删除'
+                })
+            }else{
+                Modal.confirm({
+                    title:'确认删除',
+                    content:'确认删除此员工？',
+                    onOk(){
+                        axios.post('delUser.php',{
+                            data:{
+                                params:item.id
+                            }
+                        }).then(res=>{
+                            console.log(res,'ress');
+                            if(res.data.code==0){
+                                _this.setState({
+                                    isVisible:false
+                                })
+                                _this.request()
+                            }
+                        })
+                    }
                 })
             }
         }
@@ -225,6 +276,16 @@ export default class User extends Component {
     }
 }
 class UserForm extends Component {
+    getState = (state) => {
+        let config = {
+            '1': '闲鱼一条',
+            '2': '奉化浪子',
+            '3': '北大才子',
+            '4': '百度FE',
+            '5': '创业者'
+        }
+        return config[state]
+    }
     render() {
         let type = this.props.type
         let userInfo = this.props.userInfo || {}
@@ -237,64 +298,71 @@ class UserForm extends Component {
             <Form layout='horizontal'>
                 <FormItem label='用户名' {...formItemLayout}>
                     {
-                        getFieldDecorator('user_name', {
-                            initialValue: userInfo.userName
-                        })(
-                            <Input type='text' placeholder='请输入用户名'></Input>
-                            // <RadioGroup>
-                            //     <Radio value={1}>男</Radio>
-                            //     <Radio value={2}>女</Radio>
-                            // </RadioGroup>
-                        )
+                        type == 'detail' ? userInfo.userName :
+                            getFieldDecorator('user_name', {
+                                initialValue: userInfo.userName
+                            })(
+                                <Input type='text' placeholder='请输入用户名'></Input>
+                                // <RadioGroup>
+                                //     <Radio value={1}>男</Radio>
+                                //     <Radio value={2}>女</Radio>
+                                // </RadioGroup>
+                            )
                     }
                 </FormItem>
                 <FormItem label='性别' {...formItemLayout}>
                     {
-                        getFieldDecorator('sex', {
-                            initialValue: userInfo.sex
-                        })(
-                            // <Input type='text' placeholder='请输入用户名'></Input>
-                            <RadioGroup>
-                                <Radio value={1}>男</Radio>
-                                <Radio value={2}>女</Radio>
-                            </RadioGroup>
-                        )
+                        type == 'detail' ? userInfo.sex :
+                            getFieldDecorator('sex', {
+                                initialValue: userInfo.sex == 1 ? '男' : '女'
+                            })(
+                                // <Input type='text' placeholder='请输入用户名'></Input>
+                                <RadioGroup>
+                                    <Radio value={1}>男</Radio>
+                                    <Radio value={2}>女</Radio>
+                                </RadioGroup>
+                            )
                     }
                 </FormItem>
                 <FormItem label='状态' {...formItemLayout}>
                     {
-                        getFieldDecorator('state', {
-                            initialValue: userInfo.state
-                        })(
-                            // <Input type='text' placeholder='请输入用户名'></Input>
-                            <Select>
-                                <Option value={1}>闲鱼一条</Option>
-                                <Option value={2}>奉化浪子</Option>
-                                <Option value={3}>北大才子</Option>
-                                <Option value={4}>百度FE</Option>
-                                <Option value={5}>创业者</Option>
-                            </Select>
-                        )
+                        type == 'detail' ? this.getState(userInfo.state) :
+                            getFieldDecorator('state', {
+                                initialValue: userInfo.state
+                            })(
+                                // <Input type='text' placeholder='请输入用户名'></Input>
+                                <Select>
+                                    <Option value={1}>闲鱼一条</Option>
+                                    <Option value={2}>奉化浪子</Option>
+                                    <Option value={3}>北大才子</Option>
+                                    <Option value={4}>百度FE</Option>
+                                    <Option value={5}>创业者</Option>
+                                </Select>
+                            )
                     }
                 </FormItem>
                 <FormItem label='生日' {...formItemLayout}>
                     {
-                        getFieldDecorator('brithday', {
-                            initialValue:moment(userInfo.brithday)
-                        })(
-                            // <Input type='text' placeholder='请输入用户名'></Input>
-                            <DatePicker></DatePicker>
-                        )
+                        type == 'detail' ? userInfo.brithday :
+
+                            getFieldDecorator('brithday', {
+                                initialValue: moment(userInfo.brithday)
+                            })(
+                                // <Input type='text' placeholder='请输入用户名'></Input>
+                                <DatePicker></DatePicker>
+                            )
                     }
                 </FormItem>
                 <FormItem label='联系地址' {...formItemLayout}>
                     {
-                        getFieldDecorator('address', {
-                            initialValue: userInfo.address
-                        })(
-                            // <Input type='text' placeholder='请输入用户名'></Input>
-                            <TextArea rows={3} placeholder='请输入联系地址'></TextArea>
-                        )
+                        type == 'detail' ? userInfo.address :
+
+                            getFieldDecorator('address', {
+                                initialValue: userInfo.address
+                            })(
+                                // <Input type='text' placeholder='请输入用户名'></Input>
+                                <TextArea rows={3} placeholder='请输入联系地址'></TextArea>
+                            )
                     }
                 </FormItem>
             </Form>
