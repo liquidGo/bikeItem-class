@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Card, Input, Button, message, Icon, Checkbox } from 'antd'
+import { Form, Card, Input, Button, message, Icon, Checkbox, Modal } from 'antd'
 const FormItem = Form.Item
 
 
@@ -7,9 +7,17 @@ class Login extends Component {
     handleSubmit = () => {
         let userInfo = this.props.form.getFieldsValue()
         this.props.form.validateFields((err, values) => {
+            // console.log(err,'err');
             if (!err) {
                 message.success(`欢迎${userInfo.userName}，你的密码为${userInfo.userPwd}`)
             } else {
+                Modal.warning({
+                    title: '警告',
+                    content: '账户或密码输入错误！',
+                    onOk:()=>{
+                        this.props.form.resetFields()
+                    }
+                })
             }
         })
     }
@@ -21,7 +29,8 @@ class Login extends Component {
                 <Card title='登录行内表单' style={{ marginBottom: '20px' }}>
                     <Form layout='inline'>
                         <FormItem>
-                            <Input placeholder='请输入用户名'></Input>
+                            <Input placeholder='请输入用户名'
+                            ></Input>
                         </FormItem>
                         <FormItem>
                             <Input placeholder='请输入密码'></Input>
@@ -57,7 +66,7 @@ class Login extends Component {
                         <FormItem>
                             {
                                 getFieldDecorator('userPwd', {
-                                    initialValue: '123',
+                                    initialValue: '',
                                     rules: []
                                 })(
                                     // <Input placeholder='123123'  ></Input>
@@ -76,7 +85,7 @@ class Login extends Component {
                                     <Checkbox>记住密码</Checkbox>
                                 )
                             }
-                            <a href='javascript:;' style={{float:'right'}}>忘记密码</a>
+                            <a href='javascript:;' style={{ float: 'right' }}>忘记密码</a>
                         </FormItem>
                         <FormItem>
                             <Button type='primary' onClick={this.handleSubmit}>登录</Button>

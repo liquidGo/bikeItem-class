@@ -20,8 +20,8 @@ export default class Etable extends Component {
                 } else {
                     //说明两次点击的是同一个，进行取消选中操作
                     selectedIds.splice(i, 1)
-                    selectedRowKeys.splice(i,1);
-                    selectedItem.splice(i,1)
+                    selectedRowKeys.splice(i, 1);
+                    selectedItem.splice(i, 1)
                 }
             } else {
                 // 当是多选的时候进行判断，如果是第一次点击上一次的id是false因为上一次为空
@@ -40,6 +40,7 @@ export default class Etable extends Component {
     tableInit = () => {
         // console.log(this.props, 'sdljfskd');
         let row_selection = this.props.rowSelection
+        console.log(row_selection, 'asd');
         let selectedRowKeys = this.props.rowSelection.selectedRowKeys;
         // console.log(selectedRowKeys, '这里测试的子组件点击行显示');
         const rowSelection = {

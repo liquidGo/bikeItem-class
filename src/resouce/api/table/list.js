@@ -15,7 +15,7 @@ Mock.mock('tableList.php', 'post', function (option) {
                     "state|1-5": 1,
                     "interest|1-8": 1,
                     "isMarried|0-1": 1,
-                    "brithday": "2000-01-01",
+                    "brithday": "@datetime",
                     "address": "北京市海淀区",
                     "time": "09:00:00"
                 }]

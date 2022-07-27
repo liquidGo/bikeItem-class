@@ -88,8 +88,8 @@ class BaseForm extends Component {
                         }
                     </FormItem>
                     formItemList.push(CHECKBOX)
-                } else if (value.type == 'datepicker') {
-                    const DatePicker = <FormItem label={label} key={field} >
+                } else if (value.type == 'DATE') {
+                    const DATE = <FormItem label={label} key={field} >
                         {
                             getFieldDecorator([field], {
                                 defaultValue: moment()
@@ -98,7 +98,7 @@ class BaseForm extends Component {
                             )
                         }
                     </FormItem>
-                    formItemList.push(DatePicker)
+                    formItemList.push(DATE)
                 }
             })
         }
