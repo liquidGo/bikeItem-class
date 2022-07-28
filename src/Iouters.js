@@ -23,6 +23,7 @@ import Common from './Common'
 import Order_details from './pages/order/Order_details'
 import Map from './pages/map/Map'
 import Bar from './pages/echarts/bar/Bar'
+import Pie from './pages/echarts/pie/Pie'
 
 export default class Iouters extends Component {
 
@@ -53,6 +54,7 @@ export default class Iouters extends Component {
                                         <Route path='/admin/user' component={User}></Route>
                                         <Route path='/admin/bikemap' component={Map}></Route>
                                         <Route path='/admin/charts/bar' component={Bar}></Route>
+                                        <Route path='/admin/charts/pie' component={Pie}></Route>
                                         <Route component={NoMatch}></Route>
                                     </Switch>
                                 </App>
