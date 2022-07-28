@@ -7,7 +7,7 @@ import echartTheme from '../themeLight'
 import echarts from 'echarts/lib/echarts'
 // import * as echarts from 'echarts'
 //导入柱形图
-import 'echarts/lib/chart/bar'
+import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 import 'echarts/lib/component/legend'
