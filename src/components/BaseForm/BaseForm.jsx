@@ -7,8 +7,10 @@ const Option = Select.Option;
 
 class BaseForm extends Component {
     handleFilterSubmit = () => {
+        //点击查询的时候获得所有表单值
         let fieldsValue = this.props.form.getFieldsValue();
         console.log(fieldsValue);
+        // 通过父传子组件的方法给父组件增加值
         this.props.filterSubmit(fieldsValue)
     }
     reset = () => {
@@ -26,22 +28,22 @@ class BaseForm extends Component {
                 let placeholder = value.placeholder;
                 let width = value.width
                 if (value.type == '时间查询') {
-                    const begin_time = <FormItem label='订单时间' key={field + '1'} >
+                    const begin_time = <FormItem label='订单时间' key={field + '1'}  >
                         {
                             getFieldDecorator('begin_time', {
                                 defaultValue: moment()
                             })(
-                                <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime={true} placeholder={'输入起始时间'}></DatePicker>
+                                <DatePicker format='YYYY-MM-DD HH:mm:ss' placeholder='选择开始时间' style={{ width: width }}/>
                             )
                         }
                     </FormItem>
                     formItemList.push(begin_time)
-                    const end_time = <FormItem label='~' colon={false} key={field + '2'} >
+                    const end_time = <FormItem label='~' colon={false} key={field + '2'}>
                         {
                             getFieldDecorator('end_time', {
                                 defaultValue: moment()
                             })(
-                                <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime={true} placeholder={'输入结束时间'}></DatePicker>
+                                <DatePicker format='YYYY-MM-DD HH:mm:ss' placeholder='选择结束时间'style={{ width: width }} />
                             )
                         }
                     </FormItem>
@@ -52,7 +54,7 @@ class BaseForm extends Component {
                             getFieldDecorator(field, {
                                 // initialValue:moment()
                             })(
-                                <Input type='text' placeholder={placeholder}></Input>
+                                <Input type='text' style={{ width: width }} placeholder={placeholder}></Input>
                             )
                         }
                     </FormItem>
@@ -94,7 +96,7 @@ class BaseForm extends Component {
                             getFieldDecorator([field], {
                                 defaultValue: moment()
                             })(
-                                <DatePicker format='YYYY-MM-DD HH:mm:ss' showTime={true} placeholder={'输入结束时间'}></DatePicker>
+                                <DatePicker format='YYYY-MM-DD HH:mm:ss' style={{ width: width }} placeholder={'输入结束时间'}></DatePicker>
                             )
                         }
                     </FormItem>

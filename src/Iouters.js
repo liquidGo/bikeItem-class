@@ -21,6 +21,7 @@ import Order from './pages/order/Order'
 import User from './pages/user/User'
 import Common from './Common'
 import Order_details from './pages/order/Order_details'
+import Map from './pages/map/Map'
 
 export default class Iouters extends Component {
 
@@ -48,7 +49,8 @@ export default class Iouters extends Component {
                                         <Route path='/admin/table/high' component={HightTable}></Route>
                                         <Route path='/admin/city' component={City}></Route>
                                         <Route path='/admin/order' component={Order}></Route>
-                                        <Route  path='/admin/user' component={User}></Route>
+                                        <Route path='/admin/user' component={User}></Route>
+                                        <Route path='/admin/bikemap' component={Map}></Route>
                                         <Route component={NoMatch}></Route>
                                     </Switch>
                                 </App>
