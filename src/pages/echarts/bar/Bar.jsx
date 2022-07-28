@@ -29,7 +29,7 @@ export default class Bar extends Component {
                 trigger: 'axis'
             }
             ,
-         
+
             xAxis: {
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
             },
