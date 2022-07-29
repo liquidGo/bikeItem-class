@@ -229,7 +229,6 @@ export default class BaseTable extends Component {
                     />
                 </Card>
                 <Card title='MOCK-单选' style={{ margin: '10px 0' }}>
-
                     <Table
                         bordered
                         rowSelection={rowSelection}

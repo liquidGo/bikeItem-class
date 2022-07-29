@@ -6,28 +6,42 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        .father {
-            width: 200px;
-            height: 200px;
-            border: 1px solid #ccc;
+    <script>
+        window.onload = function () {
+            //获得canvas对应的DOM对象
+            var mycanvas = document.getElementById("mycanvas");
+            //根据DOM对象获得对应的绘图上下文对象2d
+            var ctx = mycanvas.getContext("2d");
+            //设置描边线宽度
+            ctx.lineWidth = 4;
+            //设置描边颜色
+            ctx.strokeStyle = "#ff0000";
+            //设置填充颜色
+            ctx.fillStyle = "#0099ff";
+            ctx.beginPath();//开始绘图
+            //画笔移动到30,30
+            ctx.moveTo(30, 30);
+            //划线从30,30-->250,30
+            ctx.lineTo(250, 30);
+            ctx.lineTo(30, 250);
+            ctx.lineTo(30, 30);
+            //到此为止图形画完了，但是看不到啊
+            //描边
+            ctx.stroke();
+            //填充
+            ctx.fill();
+            ctx.closePath();//封闭图形
+
         }
 
-        .child {
-            width: 100px;
-            height: 100px;
-        }
-
-        .father:hover .child {
-            border: 1px solid #ccc;
-        }
-    </style>
+    </script>
 </head>
 
 <body>
-    <div class="father">
-        <div class="child"></div>
-    </div>
+    <canvas id="cav" width="500" height="500">
+
+    </canvas>
 </body>
+
 
 </html>

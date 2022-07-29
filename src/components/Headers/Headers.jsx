@@ -24,13 +24,13 @@ export default class Headers extends Component {
     getWeatherApi() {
         // console.log(Axios1);
         Axios1.jsonp({
-            url: 'https://v0.yiketianqi.com/api/worldchina?appid=59964865&appsecret=B6k8KEOl'
+            url: 'https://www.yiketianqi.com/free/day?appid=59964865&appsecret=B6k8KEOl&unescape=1'
         }).then(res => {
-            console.log(res);
+            console.log(res,'123');
             if (res) {
                 let city = res.city;
-                let wea = res.day.phrase;
-                let temperature=res.day.temperature
+                let wea = res.wea;
+                let temperature=res.tem
                 this.setState({
                     city, wea,temperature
                 })

@@ -6,6 +6,7 @@ const FormItem = Form.Item
 const RadioGroup = Radio.Group
 const Option = Select.Option
 const TextArea = Input.TextArea;
+import '../../resouce/api/upload'
 class Rigister extends Component {
     state = {}
     handleChange = (info) => {

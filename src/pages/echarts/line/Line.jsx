@@ -142,7 +142,6 @@ export default class Pie extends Component {
 
 
     render() {
-        console.log(echarts.registerTheme);
         return (
             <div>
 
