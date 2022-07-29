@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Card, Button, Modal, Form, Input, Select, Tree } from 'antd'
+import { Card, Button, Modal, Form, Input, Select, Tree, Transfer } from 'antd'
 import Etable from '../../components/Etable/Etable'
 import Utils from '../../utils/utils'
 import axios from 'axios'
 import '../../resouce/api/role/list'
 import '../../resouce/api/role/create'
 import '../../resouce/api/permission/edit'
+import '../../resouce/api/role/user_list'
+import '../../resouce/api/role/user_role_edit'
 import menuConfig from '../../resouce/menuConfig'
 const FormItem = Form.Item
 const Option = Select.Option
@@ -15,7 +17,8 @@ class Permission extends Component {
     state = {
         selectedRowKeys: '',
         visible: false,
-        authorityVisibel: false
+        authorityVisibel: false,
+        userVisibel: false
     }
     params = {
         page: 1
@@ -117,6 +120,7 @@ class Permission extends Component {
             })
         }
     }
+    //用户授权
     userauthority = () => {
         let item = this.state.selectedItem;
         if (!item) {
@@ -125,12 +129,78 @@ class Permission extends Component {
                 content: '请选择一条用户！',
             })
             return
+        } else {
+            console.log(item.id, '查看选中的id');
+            this.setState({
+                userVisibel: true,
+                detailInfo: item
+            })
+            this.getRoleUser(item.id)
         }
     }
-    getRoleUser=(id)=>{
-        
-    }
+    //获取用户
+    getRoleUser = (id) => {
+        let item = this.state.selectedItem;
+        let ajaxLoading = document.getElementById('ajaxLoading')
+        ajaxLoading.style.display = 'block'
+        axios.post('user_list.php', {
+            //把当前选中的id发送给后端，后端根据发送的id进行写入逻辑
+            data: {
+                params: {
+                    id
+                }
+            }
+        }).then(res => {
+            if (res.data.code == '0') {
+                console.log(res, '打印一下14章最后一个组件');
+                ajaxLoading.style.display = 'none'
 
+                this.getAuthUserList(res.data.result)
+            }
+        })
+    }
+    getAuthUserList = (data) => {
+        console.log(data, 'data,data,data,data');
+        //rightData就是目标的key值
+        const leftData = []
+        const rightData = []
+        for (var i = 0; i < data.length; i++) {
+            // console.log(data[i]);
+            const data1 = {
+                key: data[i].user_id,
+                title: data[i].user_name,
+                status: data[i].status
+            }
+            if (data[i].status == 1) {
+                rightData.push(data1.key)
+            }
+            leftData.push(data1)
+
+        }
+        this.setState({
+            leftData: leftData,
+            rightData: rightData
+        })
+        console.log(this.state, '打印一下state');
+    }
+    userAuthoritySubmit = () => {
+        let data = {}
+        //选中的所有数据和选中的单条数据传送给后台
+        data.user_ids = this.state.rightData;
+        data.role_id = this.state.selectedItem.id;
+        let ajaxLoading = document.getElementById('ajaxLoading')
+        ajaxLoading.style.display = 'block'
+        axios.post('user_role_edit.php', {
+            params: {
+                data: data
+            }
+        }).then(res => {
+            ajaxLoading.style.display = 'none'
+            this.setState({
+                userVisibel:false
+            })
+        })
+    }
     render() {
         console.log(this, '测试父组件的this');
         const formItemLayout = {
@@ -251,6 +321,29 @@ class Permission extends Component {
                         }}
                     />
                 </Modal>
+                <Modal
+                    visible={this.state.userVisibel}
+                    width={800}
+                    title='用户授权'
+                    onOk={this.userAuthoritySubmit}
+                    onCancel={() => {
+                        this.setState({
+                            userVisibel: false
+                        })
+                    }}
+                >
+                    <UserModalForm
+                        wrappedComponentRef={(c) => { this.usermodalF = c }}
+                        detailInfo={this.state.detailInfo}
+                        leftData={this.state.leftData}
+                        rightData={this.state.rightData}
+                        pathUserInfo={(rightData) => {
+                            this.setState({
+                                rightData
+                            })
+                        }}
+                    />
+                </Modal>
             </div>
         )
     }
@@ -319,3 +412,40 @@ class Authority extends Component {
     }
 }
 Authority = Form.create({})(Authority)
+
+class UserModalForm extends Component {
+    handleChange = (targetKeys) => {
+        this.props.pathUserInfo(targetKeys)
+    }
+    render() {
+        console.log(this.props, ('最后一个组件'));
+        let { getFieldDecorator } = this.props.form
+        let { detailInfo } = this.props
+        const formItemLayout = {
+            labelCol: { span: 5 },
+            wrapperCol: { span: 15 }
+        }
+        return (
+            <Form>
+                <FormItem label='用户授权' {...formItemLayout}>
+                    {getFieldDecorator('name_user')(
+                        <Input disabled placeholder={detailInfo.role_name}></Input>
+                    )}
+                </FormItem>
+                <FormItem label='选择用户' {...formItemLayout}>
+                    <Transfer
+                        listStyle={{ width: 200, height: 400 }}
+                        dataSource={this.props.leftData}
+                        targetKeys={this.props.rightData}
+                        titles={['待选用户', '已选用户']}
+                        // locale='locale'
+                        showSearch//显示搜索框
+                        render={item => item.title}
+                        onChange={this.handleChange}
+                    ></Transfer>
+                </FormItem>
+            </Form>
+        )
+    }
+}
+UserModalForm = Form.create({})(UserModalForm)

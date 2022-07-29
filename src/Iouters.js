@@ -49,7 +49,6 @@ export default class Iouters extends Component {
                                 render={() =>
                                     <App>
                                         <Switch>
-                                            
                                             <Route path='/' exact component={Home}></Route>
                                             <Route path='/admin/home' component={Home}></Route>
                                             <Route path='/admin/ui/buttons' component={Buttons}></Route>
