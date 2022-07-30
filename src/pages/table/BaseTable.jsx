@@ -3,11 +3,11 @@ import '../../resouce/api/table/list.js'
 import '../../style/loading.less'
 import axios from 'axios'
 import React, { Component } from 'react'
-import { Card, Table, Modal, Button } from 'antd'
+import { Card, Table, Modal, Button, Form } from 'antd'
 import Utils from '../../utils/utils.js'
 import { message } from 'antd'
 
-export default class BaseTable extends Component {
+class BaseTable extends Component {
     state = {
         isLoading: false
     }
@@ -36,7 +36,8 @@ export default class BaseTable extends Component {
                 this.setState({
                     dataSource2: data,
                     selectedRowKeys: [],
-                    selectedRows: null,
+                    selectedRowKeys1: [],
+                    // selectedRows: null,
                     pagination: Utils.pagination(res, (current) => {
                         _this.params.page = current;
                         this.request();
@@ -98,9 +99,22 @@ export default class BaseTable extends Component {
 
     onRowClick = (record, index) => {
         let selectkey = [index];
+        const interest1=(record)=>{
+            let config = {
+                '1': '游泳',
+                '2': '打篮球',
+                '3': '踢足球',
+                '4': '百度FE',
+                '5': '创业者',
+                '6': '读书',
+                '7': '玩电脑',
+                '8': '跑步'
+            }
+            return config[record]
+        }
         Modal.info({
             title: '信息',
-            content: `用户名：${record.userName},用户爱好：${record.interest}`
+            content: `用户名：${record.userName},用户爱好：${interest1(record.interest)}`
         })
         this.setState({
             //这里为table行的索引
@@ -110,25 +124,36 @@ export default class BaseTable extends Component {
         })
     }
     onRowClick1 = (record, index) => {
-        let selectkey = [index];
+        // let selectkey = [index];
+        let selectkey
         // Modal.info({
         //     title: '信息',
         //     content: `用户名：${record.userName},用户爱好：${record.interest}`
         // })
+        // console.log(this.state.selectedRowKeys1,'selectedRowKeys1');
+        const i = this.state.selectedRowKeys1.indexOf(index)
+        if (i == -1) {
+            this.state.selectedRowKeys1.push(index)
+        } else {
+            this.state.selectedRowKeys1.splice(i, 1)
+        }
+        console.log(selectkey, 'i');
         this.setState({
             //这里为table行的索引
-            selectedRowKeys: selectkey,
+            selectedRowKeys1: this.state.selectedRowKeys1,
             //这里为行的数据
             selectedItem: record
         })
     }
 
     handleDelete = (() => {
-        let rows = this.state.selectedRows;
+        let rows = this.state.selectedRowKeys1;
         let ids = [];
         rows.map(item => {
             ids.push(item.id);
         })
+        // 提交后清楚选中
+
         Modal.confirm({
             title: '删除提示',
             content: `您确定要删除这些数据吗？${ids.join(',')}`,
@@ -198,6 +223,8 @@ export default class BaseTable extends Component {
                 dataIndex: 'time'
             }
         ]
+        console.log(this.props, '查看是否有form');
+        // let {getFieldDecorator}=this.props.Form
         const { selectedRowKeys } = this.state;
         const rowSelection = {
             type: 'radio',
@@ -205,10 +232,10 @@ export default class BaseTable extends Component {
         }
         const rowCheckSelection = {
             type: 'checkbox',
-            selectedRowKeys,
-            onChange: (selectedRowKeys, selectedRows) => {
+            selectedRowKeys: this.state.selectedRowKeys1,
+            onChange: (selectedRowKeys1, selectedRows1) => {
                 this.setState({
-                    selectedRowKeys, selectedRows
+                    selectedRowKeys1, selectedRows1
                 })
             }
         }
@@ -244,35 +271,41 @@ export default class BaseTable extends Component {
                         pagination={false}
                     />
                 </Card>
-                <Card title="Mock-多选" style={{ margin: '10px 0' }}>
-                    <div style={{ marginBottom: 10 }}>
-                        <Button onClick={this.handleDelete}>删除</Button>
-                    </div>
-                    <Table
-                        bordered
-                        rowSelection={rowCheckSelection}
-                        columns={columns}
-                        dataSource={this.state.dataSource2}
-                        pagination={false}
-                        onRow={(record, index) => {
-                            return {
-                                onClick: () => {
-                                    this.onRowClick1(record, index)
-                                }
-                            }
-                        }}
-                    />
-                </Card>
-                <Card title="Mock-分页功能" style={{ margin: '10px 0' }}>
+                <Form>
 
-                    <Table
-                        bordered
-                        columns={columns}
-                        dataSource={this.state.dataSource2}
-                        pagination={this.state.pagination}
-                    />
-                </Card>
+                    <Card title="Mock-多选" style={{ margin: '10px 0' }}>
+                        <div style={{ marginBottom: 10 }}>
+                            <Button onClick={this.handleDelete}>删除</Button>
+                        </div>
+                        <Table
+                            bordered
+                            rowSelection={rowCheckSelection}
+                            columns={columns}
+                            dataSource={this.state.dataSource2}
+                            pagination={false}
+                            onRow={(record, index) => {
+                                return {
+                                    onClick: () => {
+                                        this.onRowClick1(record, index)
+                                    }
+                                }
+                            }}
+                        />
+                    </Card>
+                    <Card title="Mock-分页功能" style={{ margin: '10px 0' }}>
+
+                        <Table
+                            bordered
+                            columns={columns}
+                            dataSource={this.state.dataSource2}
+                            pagination={this.state.pagination}
+                        />
+                    </Card>
+                </Form>
+
             </div>
         )
     }
 }
+
+export default Form.create()(BaseTable)
