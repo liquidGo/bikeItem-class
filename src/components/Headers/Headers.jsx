@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Row, Col } from 'antd'
+import { connect } from 'react-redux'
 import './index.less'
 import Utils from '../../utils/utils'
 import Axios1 from '../axios/index'
 
-export default class Headers extends Component {
+class Headers extends Component {
     constructor() {
         super()
         this.state = {}
@@ -26,19 +27,23 @@ export default class Headers extends Component {
         Axios1.jsonp({
             url: 'https://www.yiketianqi.com/free/day?appid=59964865&appsecret=B6k8KEOl&unescape=1'
         }).then(res => {
-            console.log(res,'123');
+            console.log(res, '123');
             if (res) {
                 let city = res.city;
                 let wea = res.wea;
-                let temperature=res.tem
+                let temperature = res.tem
                 this.setState({
-                    city, wea,temperature
+                    city, wea, temperature
                 })
             }
         })
     }
 
     render() {
+        let {menu} =this.props
+        // console.log(menu,'this.props');
+        // console.log(this.props,'this.props');
+
         const menuType = this.props.menuType;
         return (
             <div className='header'>
@@ -48,16 +53,16 @@ export default class Headers extends Component {
                             <Col span={6} className='logo'>
                                 <img src="/assets/logo-ant.svg" alt="" />
                                 <span>左岸管理系统</span>
-                            </Col>:''
+                            </Col> : ''
                     }
-                    <Col span={menuType?18:24}>
+                    <Col span={menuType ? 18 : 24}>
                         <span>欢迎，{this.state.userName}</span>
                         <a href='#'>退出</a>
                     </Col>
                 </Row>
                 {
                     menuType ? '' : <Row className='breadcrumb'>
-                        <Col span={4} className='breadcrumb-title'>首页</Col>
+                        <Col span={4} className='breadcrumb-title'>{menu.menuName}</Col>
                         <Col span={20} className='weather'>
                             <span className='date' >{this.state.sysTime}</span>
                             <span className='weather-detail'>{this.state.city}{'     '}{this.state.wea}{' '}{this.state.temperature}{'°'}</span>
@@ -69,3 +74,10 @@ export default class Headers extends Component {
         )
     }
 }
+const mapStateToProps=(state,own)=>{
+    return{
+        menu:state
+    }
+}
+
+export default connect(mapStateToProps)(Headers)
